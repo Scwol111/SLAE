@@ -30,6 +30,8 @@ FPI::FPI(std::vector<std::vector<double> > const &data, double psi): _solved(dat
 				_data[i][j] /= x;
 			else
 				_data[i][j] = 0;
+			if (j + 1 < _data.size())
+				_data[i][j] *= -1;
 		}
 	}
 	do
@@ -61,6 +63,8 @@ FPI::FPI(std::vector<std::vector<double> > const &data, std::vector<double> cons
 				_data[i][j] /= x;
 			else
 				_data[i][j] = 0;
+			if (j + 1 < _data.size())
+				_data[i][j] *= -1;
 		}
 	}
 	do

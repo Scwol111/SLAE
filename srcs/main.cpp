@@ -2,6 +2,7 @@
 #include <vector>
 #include <fstream>
 #include <string>
+#include <ctime>
 #include "../includes/FPI.hpp"
 #include "../includes/Seidel.hpp"
 
@@ -63,8 +64,8 @@ int main(int argc, char **argv)
 	if (dt.input_data)
 	{
 		size_t size;
-		FPI *r1;
-		Seidel *r2;
+		FPI *r1, *r3;
+		Seidel *r2, *r4;
 		std::vector<double> d;
 		std::cout << "Please enter size of matrix A: ";
 		std::cin >> size;
@@ -84,34 +85,48 @@ int main(int argc, char **argv)
 				std::cin >> d[i];
 			r1 = new FPI(data, d, count_epsilon(dt.epsi));
 			r2 = new Seidel(data, d, count_epsilon(dt.epsi));
+			r3 = new FPI(data, d, count_epsilon(5));
+			r4 = new Seidel(data, d, count_epsilon(5));
 		}
 		else
 		{
 			r1 = new FPI(data, count_epsilon(dt.epsi));
 			r2 = new Seidel(data, count_epsilon(dt.epsi));
+			r3 = new FPI(data, count_epsilon(5));
+			r4 = new Seidel(data, count_epsilon(5));
 		}	
 		if (dt.full)
 		{
 			r1->fullSolve();
 			std::cout << std::endl;
 			r2->fullSolve();
+			std::cout << std::endl;
+			r3->fullSolve();
+			std::cout << std::endl;
+			r4->fullSolve();
 		}
 		else
 		{
 			r1->solve();
 			std::cout << std::endl;
 			r2->solve();
+			std::cout << std::endl;
+			r3->solve();
+			std::cout << std::endl;
+			r4->solve();
 		}
 		delete r1;
 		delete r2;
+		delete r3;
+		delete r4;
 	}
 	else
 	{
 		std::ifstream ifs(argv[argc - 1]);
 		std::vector<double> d;
 		std::string str;
-		FPI *r1;
-		Seidel *r2;
+		FPI *r1, *r3;
+		Seidel *r2, *r4;
 		if (!ifs.is_open())
 		{
 			std::cout << "bad_file" << std::endl;
@@ -141,25 +156,40 @@ int main(int argc, char **argv)
 				std::cin >> d[i];
 			r1 = new FPI(data, d, count_epsilon(dt.epsi));
 			r2 = new Seidel(data, d, count_epsilon(dt.epsi));
+			r3 = new FPI(data, d, count_epsilon(5));
+			r4 = new Seidel(data, d, count_epsilon(5));
 		}
 		else
 		{
 			r1 = new FPI(data, count_epsilon(dt.epsi));
 			r2 = new Seidel(data, count_epsilon(dt.epsi));
+			r3 = new FPI(data, count_epsilon(5));
+			r4 = new Seidel(data, count_epsilon(5));
 		}
 		if (dt.full)
 		{
 			r1->fullSolve();
 			std::cout << std::endl;
 			r2->fullSolve();
+			std::cout << std::endl;
+			r3->fullSolve();
+			std::cout << std::endl;
+			r4->fullSolve();
 		}
 		else
 		{
 			r1->solve();
 			std::cout << std::endl;
-			r2->solve();	
+			r2->solve();
+			std::cout << std::endl;
+			r3->solve();
+			std::cout << std::endl;
+			r4->solve();
 		}
 		delete r1;
+		delete r3;
+		delete r4;
+		delete r2;
 	}
 	return 0;
 }

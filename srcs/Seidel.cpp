@@ -30,6 +30,8 @@ Seidel::Seidel(std::vector<std::vector<double> > const &data, double psi): _solv
 				_data[i][j] /= x;
 			else
 				_data[i][j] = 0;
+			if (j + 1 < _data.size())
+				_data[i][j] *= -1;
 		}
 	}
 	do
@@ -60,6 +62,8 @@ Seidel::Seidel(std::vector<std::vector<double> > const &data, std::vector<double
 				_data[i][j] /= x;
 			else
 				_data[i][j] = 0;
+			if (j + 1 < _data.size())
+				_data[i][j] *= -1;
 		}
 	}
 	do
