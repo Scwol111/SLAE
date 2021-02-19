@@ -185,6 +185,7 @@ int main(int argc, char **argv)
 			r3->solve();
 			std::cout << std::endl;
 			r4->solve();
+			std::cout << std::endl;
 		}
 		delete r1;
 		delete r3;
