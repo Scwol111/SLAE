@@ -26,6 +26,7 @@ public:
 
 	void	fullSolve();
 	void	solve();
+	void	table();
 };
 
 #endif // !SEIDEL_HPP

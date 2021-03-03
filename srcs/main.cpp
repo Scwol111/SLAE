@@ -12,6 +12,7 @@ struct Data
 	bool input_start;
 	bool get_epsi;
 	bool full;
+	bool table;
 	int		epsi;
 };
 
@@ -21,7 +22,8 @@ void	fill_data(Data &d)
 	d.input_start = false;
 	d.get_epsi = false;
 	d.full = false;
-	d.epsi = 5;
+	d.epsi = 3;
+	d.table = false;
 }
 
 void	ft_parse(std::string const &str, Data &d)
@@ -39,6 +41,8 @@ void	ft_parse(std::string const &str, Data &d)
 		d.get_epsi = true;
 	if (str == " --full ")
 		d.full = true;
+	if (str == " --table ")
+		d.table = true;
 }
 
 double count_epsilon(int x)
@@ -52,6 +56,10 @@ double count_epsilon(int x)
 int main(int argc, char **argv)
 {
 	Data dt;
+	FPI *r1, *r3;
+	Seidel *r2, *r4;
+	size_t size = 0;
+	std::vector<double> d;
 	std::vector<std::vector<double> > data;
 
 	std::srand(std::time(nullptr));
@@ -63,9 +71,6 @@ int main(int argc, char **argv)
 	}
 	if (dt.input_data)
 	{
-		size_t size;
-		FPI *r1, *r3;
-		Seidel *r2, *r4;
 		std::vector<double> d;
 		std::cout << "Please enter size of matrix A: ";
 		std::cin >> size;
@@ -77,56 +82,11 @@ int main(int argc, char **argv)
 			data.push_back(d);
 			d.clear();
 		}
-		if (dt.input_start)
-		{
-			std::cout << "Please enter start iteration with size " << size << std::endl;
-			d = std::vector<double>(size);
-			for (size_t i = 0; i < size; i++)
-				std::cin >> d[i];
-			r1 = new FPI(data, d, count_epsilon(dt.epsi));
-			r2 = new Seidel(data, d, count_epsilon(dt.epsi));
-			r3 = new FPI(data, d, count_epsilon(5));
-			r4 = new Seidel(data, d, count_epsilon(5));
-		}
-		else
-		{
-			r1 = new FPI(data, count_epsilon(dt.epsi));
-			r2 = new Seidel(data, count_epsilon(dt.epsi));
-			r3 = new FPI(data, count_epsilon(5));
-			r4 = new Seidel(data, count_epsilon(5));
-		}	
-		if (dt.full)
-		{
-			r1->fullSolve();
-			std::cout << std::endl;
-			r2->fullSolve();
-			std::cout << std::endl;
-			r3->fullSolve();
-			std::cout << std::endl;
-			r4->fullSolve();
-		}
-		else
-		{
-			r1->solve();
-			std::cout << std::endl;
-			r2->solve();
-			std::cout << std::endl;
-			r3->solve();
-			std::cout << std::endl;
-			r4->solve();
-		}
-		delete r1;
-		delete r2;
-		delete r3;
-		delete r4;
 	}
 	else
 	{
 		std::ifstream ifs(argv[argc - 1]);
-		std::vector<double> d;
 		std::string str;
-		FPI *r1, *r3;
-		Seidel *r2, *r4;
 		if (!ifs.is_open())
 		{
 			std::cout << "bad_file" << std::endl;
@@ -148,49 +108,61 @@ int main(int argc, char **argv)
 			data.push_back(d);
 			d.clear();
 		}
-		if (dt.input_start)
-		{
-			std::cout << "Please enter start iteration with size " << data.size() << std::endl;
-			d = std::vector<double>(data.size());
-			for (size_t i = 0; i < d.size(); i++)
-				std::cin >> d[i];
-			r1 = new FPI(data, d, count_epsilon(dt.epsi));
-			r2 = new Seidel(data, d, count_epsilon(dt.epsi));
-			r3 = new FPI(data, d, count_epsilon(5));
-			r4 = new Seidel(data, d, count_epsilon(5));
-		}
-		else
-		{
-			r1 = new FPI(data, count_epsilon(dt.epsi));
-			r2 = new Seidel(data, count_epsilon(dt.epsi));
-			r3 = new FPI(data, count_epsilon(5));
-			r4 = new Seidel(data, count_epsilon(5));
-		}
-		if (dt.full)
-		{
-			r1->fullSolve();
-			std::cout << std::endl;
-			r2->fullSolve();
-			std::cout << std::endl;
-			r3->fullSolve();
-			std::cout << std::endl;
-			r4->fullSolve();
-		}
-		else
-		{
-			r1->solve();
-			std::cout << std::endl;
-			r2->solve();
-			std::cout << std::endl;
-			r3->solve();
-			std::cout << std::endl;
-			r4->solve();
-			std::cout << std::endl;
-		}
-		delete r1;
-		delete r3;
-		delete r4;
-		delete r2;
 	}
+	if (dt.input_start)
+	{
+		if (size == 0)
+			size = data.size();
+		std::cout << "Please enter start iteration with size " << size << std::endl;
+		d = std::vector<double>(size);
+		for (size_t i = 0; i < size; i++)
+			std::cin >> d[i];
+		r1 = new FPI(data, d, count_epsilon(dt.epsi));
+		r2 = new Seidel(data, d, count_epsilon(dt.epsi));
+		r3 = new FPI(data, d, count_epsilon(dt.epsi + 2));
+		r4 = new Seidel(data, d, count_epsilon(dt.epsi + 2));
+	}
+	else
+	{
+		r1 = new FPI(data, count_epsilon(dt.epsi));
+		r2 = new Seidel(data, count_epsilon(dt.epsi));
+		r3 = new FPI(data, count_epsilon(dt.epsi + 2));
+		r4 = new Seidel(data, count_epsilon(dt.epsi + 2));
+	}	
+	if (dt.full)
+	{
+		r1->fullSolve();
+		std::cout << std::endl;
+		r2->fullSolve();
+		std::cout << std::endl;
+		r3->fullSolve();
+		std::cout << std::endl;
+		r4->fullSolve();
+	}
+	else if (dt.table)
+	{
+		r1->table();
+		std::cout << std::endl;
+		r2->table();
+		std::cout << std::endl;
+		r3->table();
+		std::cout << std::endl;
+		r4->table();
+		std::cout << std::endl;
+	}
+	else
+	{
+		r1->solve();
+		std::cout << std::endl;
+		r2->solve();
+		std::cout << std::endl;
+		r3->solve();
+		std::cout << std::endl;
+		r4->solve();
+	}
+	delete r1;
+	delete r2;
+	delete r3;
+	delete r4;
 	return 0;
 }

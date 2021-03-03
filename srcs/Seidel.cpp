@@ -17,7 +17,7 @@ Seidel::Seidel(std::vector<std::vector<double> > const &data, double psi): _solv
 {
 	for (size_t i = 0; i < _solved.size(); i++)
 	{
-		_solved[i] = std::rand() % 10;
+		_solved[i] = std::rand() % 100;
 		if (_solved[i] == 0)
 			_solved[i]++;
 	}
@@ -49,6 +49,7 @@ Seidel::Seidel(std::vector<std::vector<double> > const &data, double psi): _solv
 		}
 	} 
 	while (!endIteration());
+	_path.push_back(_solved);
 }
 
 Seidel::Seidel(std::vector<std::vector<double> > const &data, std::vector<double> const &solve, double psi): _solved(solve), _data(data), _epsi(psi)
@@ -81,6 +82,7 @@ Seidel::Seidel(std::vector<std::vector<double> > const &data, std::vector<double
 		}
 	} 
 	while (!endIteration());
+	_path.push_back(_solved);
 }
 
 Seidel& Seidel::operator=(Seidel const& src) 
@@ -98,8 +100,6 @@ bool	Seidel::endIteration()
 	for (size_t i = 0; i < _solved.size(); i++)
 	{
 		double x = std::abs(_solved[i] - _path.back()[i]);
-		if (x <= _epsi)
-			return true;
 		sum += x;
 	}
 	if (sum <= _epsi)
@@ -131,3 +131,50 @@ void	Seidel::fullSolve()
 	std::cout << std::endl;
 }
 
+void Seidel::table()
+{
+	std::cout << "Seidel table with " << _epsi << " precision" << std::endl;
+	// std::cout << "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------" << std::endl;
+	// for (size_t i = 1; i < _path.size(); i++)
+	// {
+	// 	double sum = 0;
+	// 	std::cout << "|" << i << '\t' << "|";
+	// 	for (size_t j = 0; j < _path[i].size(); j++)
+	// 	{
+	// 		std::printf("%.7f\t|%.7f\t|%.7f\t|", _path[i - 1][j], _path[i][j], std::abs(_path[i][j] - _path[i - 1][j]));
+	// 		sum += std::abs(_path[i][j] - _path[i - 1][j]);
+	// 	}
+	// 	printf("%.7f\t|", sum);
+	// 	std::cout << std::endl;
+	// 	std::cout << "-----------------------------------------------------------------------------------------------------------------------------------------------------------------------" << std::endl;
+	// }
+	std::cout << "---------------------------------------------------------------------------------------------------------------------------------" << std::endl;
+	std::cout << "|k + 1|";
+	char x = 'x';
+	for (size_t i = 0; i < _solved.size(); i++, x++)
+	{
+		std::string s1 = "(k)";
+		s1 = x + s1;
+		std::string s2 = "(k+1)";
+		s2 = x + s2;
+		std::string s3 = "delta(";
+		s3 += x;
+		s3 += ")";
+		printf("%11s|%11s|%11s|", s1.c_str(), s2.c_str(), s3.c_str());
+	}
+	printf("%13s|\n", "Sum");
+	std::cout << "---------------------------------------------------------------------------------------------------------------------------------" << std::endl;
+	for (size_t i = 1; i < _path.size(); i++)
+	{
+		double sum = 0;
+		printf("|%5lu|", i);
+		for (size_t j = 0; j < _path[i].size(); j++)
+		{
+			std::printf("%11.7f|%11.7f|%11.7f|", _path[i - 1][j], _path[i][j], std::abs(_path[i][j] - _path[i - 1][j]));
+			sum += std::abs(_path[i][j] - _path[i - 1][j]);
+		}
+		printf("%13.7f|", sum);
+		std::cout << std::endl;
+		std::cout << "---------------------------------------------------------------------------------------------------------------------------------" << std::endl;
+	}
+}

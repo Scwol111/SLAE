@@ -1,11 +1,8 @@
 NAME = ft_slae
-
 SRCS = ./srcs/main.cpp ./srcs/FPI.cpp ./srcs/Seidel.cpp
-
+INCLUDE = ./includes/FPI.hpp ./includes/Seidel.hpp
 OBJ = $(SRCS:.cpp=.o)
-
 CC = clang++
-
 FLAGS = -Wall -Wextra -Werror
 
 all: $(NAME)
@@ -18,7 +15,7 @@ fclean: clean
 
 re: fclean $(NAME)
 
-%.o: %.cpp ./includes/*.hpp
+%.o: %.cpp $(INCLUDE)
 	$(CC) $(FLAGS) -c $<
 
 $(NAME): $(OBJ)
