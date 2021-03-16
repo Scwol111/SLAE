@@ -102,8 +102,6 @@ bool	FPI::endIteration()
 	for (size_t i = 0; i < _solved.size(); i++)
 	{
 		double x = std::abs(_solved[i] - _path.back()[i]);
-		// if (x <= _epsi)
-		// 	return true;
 		sum += x;
 	}
 	if (sum <= _epsi)
@@ -129,9 +127,6 @@ void	FPI::fullSolve()
 			std::cout << _path[i][j] << " ";
 		std::cout << std::endl;
 	}
-	// std::cout << "FPI(" << i << "): ";
-	// for (size_t j = 0; j < _solved.size(); j++)
-	// 	std::cout << _solved[j] << " ";
 	std::cout << std::endl;
 }
 

@@ -6,7 +6,7 @@
 #include <vector>
 #include <cmath>
 
-class FPI 
+class FPI
 {
 private:
 	std::vector<std::vector<double> >	_path;
